@@ -5,7 +5,7 @@ import axios from 'axios';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
-const CartPage = () => {
+const Cart = () => {
   const [cart, setCart] = useState([]);
   const [total, setTotal] = useState(0);
   const router = useRouter();
@@ -53,4 +53,4 @@ const CartPage = () => {
   );
 };
 
-export default CartPage;
+export default Cart;

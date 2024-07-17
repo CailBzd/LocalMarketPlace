@@ -1,22 +1,27 @@
-// pages/index.js
-import Head from 'next/head'
-import Link from 'next/link'
+import { GetServerSideProps } from 'next';
+import { PrismaClient } from '@prisma/client';
+import ProductCard from '../components/ProductCard';
 
-export default function Home() {
+const prisma = new PrismaClient();
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const products = await prisma.product.findMany();
+  return {
+    props: { products },
+  };
+};
+
+const Home = ({ products }: { products: any[] }) => {
   return (
-    <div>
-      <Head>
-        <title>Local Marketplace</title>
-        <meta name="description" content="Buy fresh and local products directly from producers" />
-      </Head>
-
-      <main className="container mx-auto p-4">
-        <h1 className="text-4xl font-bold">Welcome to Local Marketplace</h1>
-        <p className="mt-4">Discover and buy fresh products from local producers.</p>
-        <Link href="/products">
-          <a className="text-blue-500">Browse Products</a>
-        </Link>
-      </main>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Produits Locaux</h1>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {products.map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
     </div>
-  )
-}
+  );
+};
+
+export default Home;
