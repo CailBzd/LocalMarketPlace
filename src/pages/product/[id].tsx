@@ -1,5 +1,10 @@
+// pages/product/[id].tsx
 import { GetServerSideProps } from 'next';
 import { PrismaClient } from '@prisma/client';
+import { Button, Layout, Card, Col, Row, Breadcrumb } from 'antd';
+import Link from 'next/link';
+
+const { Header, Content, Footer } = Layout;
 
 const prisma = new PrismaClient();
 
@@ -15,13 +20,52 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 const ProductPage = ({ product }: { product: any }) => {
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">{product.name}</h1>
-      <img src={product.imageUrl} alt={product.name} className="w-full h-64 object-cover rounded-md" />
-      <p className="text-gray-700">{product.description}</p>
-      <p className="text-lg font-semibold mt-2">${product.price}</p>
-      <button className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md">Ajouter au panier</button>
-    </div>
+    <Layout className="min-h-screen">
+      <Header className="flex items-center justify-between">
+        <div className="logo text-white text-2xl font-bold">Local Products</div>
+        <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
+          <Menu.Item key="1">
+            <Link href="/">Accueil</Link>
+          </Menu.Item>
+          <Menu.Item key="2">
+            <Link href="/cart">
+              <ShoppingCartOutlined /> Panier
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="3">
+            <Link href="/profile">
+              <UserOutlined /> Profil
+            </Link>
+          </Menu.Item>
+        </Menu>
+      </Header>
+      <Content style={{ padding: '0 50px' }} className="mt-6">
+        <Breadcrumb style={{ margin: '16px 0' }}>
+          <Breadcrumb.Item>
+            <Link href="/">Accueil</Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>{product.name}</Breadcrumb.Item>
+        </Breadcrumb>
+        <div className="site-layout-content bg-white p-6 rounded-md shadow-md">
+          <Row gutter={16}>
+            <Col span={12}>
+              <Card cover={<img alt={product.name} src={product.imageUrl} />}>
+                <Card.Meta title={product.name} description={product.description} />
+                <div className="price">
+                  <h2 className="text-2xl font-bold">${product.price}</h2>
+                </div>
+                <Button type="primary" block>
+                  Ajouter au panier
+                </Button>
+              </Card>
+            </Col>
+          </Row>
+        </div>
+      </Content>
+      <Footer style={{ textAlign: 'center' }}>
+        Local Products ©2024 Created by YourName
+      </Footer>
+    </Layout>
   );
 };
 
