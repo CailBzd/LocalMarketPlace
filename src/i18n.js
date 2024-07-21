@@ -21,7 +21,11 @@ const resources = {
       "search": "Search",
       "producer_name": "Producer Name",
       "distance": "Distance (km)",
-      "home": "Home"
+      "home": "Home",
+      "login": "Login",
+      "signup": "Sign up",
+      "forgot_password": "Forgot Password?",
+      "logout": "Logout",
     } 
   },
   fr: {
@@ -42,7 +46,11 @@ const resources = {
       "search": "Rechercher",
       "producer_name": "Nom du Producteur",
       "distance": "Distance (km)",
-      "home": "Accueil" 
+      "home": "Accueil",
+      "login": "Se connecter",
+      "signup": "S'enregistrer",
+      "forgot_password": "Mot de passe oublié ?",
+      "logout": "Déconnexion",
     } 
   }
 };

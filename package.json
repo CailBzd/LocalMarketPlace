@@ -21,6 +21,7 @@
     "bcrypt": "^5.1.1",
     "geolib": "^3.3.4",
     "i18next": "^23.12.2",
+    "jsonwebtoken": "^9.0.2",
     "next": "14.2.5",
     "next-i18next": "^15.3.0",
     "react": "^18",

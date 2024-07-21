@@ -6,7 +6,7 @@ const HomePage = () => {
 
   return (
     <AppLayout>
-      <h1>{t('common:welcome')}</h1>
+      <h1>{t('welcome')}</h1>
       <p>{t('description')}</p>
     </AppLayout>
   );
