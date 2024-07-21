@@ -9,9 +9,15 @@ generator client {
 
 model User {
   id        Int      @id @default(autoincrement())
+  name      String
   email     String   @unique
   password  String
-  role      String
+  role      Role     @default(USER)
+  address   String?
+  latitude  Float?
+  longitude Float?
+  products  Product[]
+  slots     Slot[]
   orders    Order[]
   reviews   Review[]
 }
@@ -21,41 +27,69 @@ model Product {
   name        String
   description String
   price       Float
-  imageUrl    String
+  unit        Unit
+  weight      Float?
+  imageBase64 String
   categoryId  Int
-  category    Category  @relation(fields: [categoryId], references: [id])
+  category    Category    @relation(fields: [categoryId], references: [id])
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  productOrders     ProductOrder[]
   reviews     Review[]
-  orders      ProductOrder[]
+}
+
+model Slot {
+  id             Int      @id @default(autoincrement())
+  dateTime       DateTime
+  maxOrders      Int
+  availableOrders Int     @default(0)
+  userId         Int
+  user           User     @relation(fields: [userId], references: [id])
+  orders         Order[]
 }
 
 model Order {
   id         Int           @id @default(autoincrement())
-  total      Float
   userId     Int
   user       User          @relation(fields: [userId], references: [id])
-  products   ProductOrder[]
+  slotId     Int
+  slot       Slot          @relation(fields: [slotId], references: [id])
+  totalPrice Float
+  productOrders  ProductOrder[]
+}
+
+model ProductOrder {
+  id         Int       @id @default(autoincrement())
+  quantity   Int
+  productId  Int
+  product    Product   @relation(fields: [productId], references: [id])
+  orderId    Int
+  order      Order     @relation(fields: [orderId], references: [id])
 }
 
 model Review {
   id         Int       @id @default(autoincrement())
   rating     Int
   comment    String
-  productId  Int
-  product    Product   @relation(fields: [productId], references: [id])
   userId     Int
   user       User      @relation(fields: [userId], references: [id])
+  productId  Int
+  product    Product   @relation(fields: [productId], references: [id])
+}
+
+enum Role {
+  USER
+  MERCHANT
+  ADMIN
+}
+
+enum Unit {
+  PIECE
+  WEIGHT
 }
 
 model Category {
   id       Int       @id @default(autoincrement())
   name     String
   products Product[]
-}
-
-model ProductOrder {
-  id        Int      @id @default(autoincrement())
-  productId Int
-  product   Product  @relation(fields: [productId], references: [id])
-  orderId   Int
-  order     Order    @relation(fields: [orderId], references: [id])
 }
