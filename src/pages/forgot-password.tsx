@@ -1,7 +1,11 @@
 import { useState } from 'react';
-import { Form, Input, Button, message } from 'antd';
+import { Form, Input, Button, Card, Typography, message } from 'antd';
+import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
 import AppLayout from '../components/Layout';
+
+const { Title } = Typography;
 
 const ForgotPasswordPage = () => {
   const [loading, setLoading] = useState(false);
@@ -10,8 +14,8 @@ const ForgotPasswordPage = () => {
   const handleForgotPassword = async (values) => {
     setLoading(true);
     try {
-      // Simulation de la récupération du mot de passe
-      message.success(t('password_reset_email_sent'));
+      const { data } = await axios.post('/api/auth/forgot-password', values);
+      message.success(data.message);
     } catch (error) {
       message.error(t('password_reset_error'));
     } finally {
@@ -21,15 +25,25 @@ const ForgotPasswordPage = () => {
 
   return (
     <AppLayout>
-      <h1>{t('forgot_password')}</h1>
-      <Form layout="vertical" onFinish={handleForgotPassword}>
-        <Form.Item name="email" label="Email" rules={[{ required: true, type: 'email' }]}>
-          <Input />
-        </Form.Item>
-        <Button type="primary" htmlType="submit" loading={loading}>
-          {t('send_reset_link')}
-        </Button>
-      </Form>
+      <div className="login-container">
+        <Card className="login-card">
+          <Title level={2} className="login-title">
+            {t('forgot_password')}
+          </Title>
+          <Form layout="vertical" onFinish={handleForgotPassword}>
+            <Form.Item name="email" label={t('email')} rules={[{ required: true, type: 'email' }]}>
+              <Input />
+            </Form.Item>
+            <Button type="primary" htmlType="submit" loading={loading} className="login-button">
+              {t('send_reset_link')}
+            </Button>
+          </Form>
+          <div className="login-links">
+            <Link href="/login">{t('login')}</Link>
+            <Link href="/signup">{t('signup')}</Link>
+          </div>
+        </Card>
+      </div>
     </AppLayout>
   );
 };

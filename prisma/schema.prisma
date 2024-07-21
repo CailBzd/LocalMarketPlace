@@ -12,7 +12,8 @@ model User {
   name      String
   email     String   @unique
   password  String
-  role      Role     @default(USER)
+  roleId    Int
+  role      Role     @relation(fields: [roleId], references: [id])
   address   String?
   latitude  Float?
   longitude Float?
@@ -27,7 +28,8 @@ model Product {
   name        String
   description String
   price       Float
-  unit        Unit
+  unitId      Int
+  unit        Unit  @relation(fields: [unitId], references: [id])
   weight      Float?
   imageBase64 String
   categoryId  Int
@@ -77,19 +79,20 @@ model Review {
   product    Product   @relation(fields: [productId], references: [id])
 }
 
-enum Role {
-  USER
-  MERCHANT
-  ADMIN
-}
-
-enum Unit {
-  PIECE
-  WEIGHT
-}
-
 model Category {
   id       Int       @id @default(autoincrement())
   name     String
   products Product[]
+}
+
+model Unit {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  products Product[]
+}
+
+model Role {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  users    User[]
 }
