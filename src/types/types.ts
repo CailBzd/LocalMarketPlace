@@ -1,6 +1,7 @@
  
   export interface Producer extends User {
     // Ajoutez des propriétés spécifiques au producteur si nécessaire
+    products: Product[];
   }
   
   export interface User {
@@ -11,9 +12,15 @@
     roleId: number;
     role: Role;
     address?: string;
+    postalCode?: string;
+    city?: string;
+    department?: string;
+    country?: string;
+    phoneNumber?: string;
     latitude?: number;
     longitude?: number;
-    products: Product[];
+    shopName?: string; // Nom de la boutique (pour les marchands)
+    shopDescription?: string; // Description de la boutique (pour les marchands)
     slots: Slot[];
     orders: Order[];
     reviews: Review[];

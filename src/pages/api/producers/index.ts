@@ -1,35 +1,50 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { PrismaClient } from '@prisma/client';
-import geolib from 'geolib';
+import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import { Input, Button, Card, Select, Typography, List, Form } from 'antd';
+import axios from 'axios';
+import AppLayout from '../../components/pLayout';
+import { useTranslation } from 'react-i18next';
 
-const prisma = new PrismaClient();
+const { Title } = Typography;
+const { Option } = Select;
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { address, radius } = req.query;
+const ProducersPage = () => {
+  const { data: session } = useSession();
+  const { t } = useTranslation('common');
+  const [producers, setProducers] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  if (!address || !radius) {
-    return res.status(400).json({ error: 'Address and radius are required' });
-  }
-
-  const user = await prisma.user.findUnique({ where: { address: String(address) } });
-  if (!user || !user.latitude || !user.longitude) {
-    return res.status(404).json({ error: 'User address not found or incomplete' });
-  }
-
-  const producers = await prisma.user.findMany({
-    where: { role: 'MERCHANT' },
+  const [searchParams, setSearchParams] = useState({
+    name: '',
+    city: '',
+    category: '',
+    maxDistance: '',
   });
 
-  const nearbyProducers = producers
-    .map((producer) => {
-      if (!producer.latitude || !producer.longitude) return null;
-      const distance = geolib.getDistance(
-        { latitude: user.latitude, longitude: user.longitude },
-        { latitude: producer.latitude, longitude: producer.longitude }
-      );
-      return { ...producer, distance: distance / 1000 }; // convert to km
-    })
-    .filter((producer) => producer && producer.distance <= Number(radius));
+  const handleSearch = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get('/api/producers/search', { params: searchParams });
+      setProducers(response.data);
+    } catch (error) {
+      console.error('Error fetching producers', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  res.status(200).json(nearbyProducers);
-}
+  useEffect(() => {
+    if (session) {
+      handleSearch();
+    }
+  }, [session]);
+
+  if (!session) {
+    return <p>{t('login_required')}</p>;
+  }
+
+  return (
+    <AppLayout>
+      <Title level={2}>{t('discover_producers')}</Title>
+      <Form layout="vertical" onFinish={handleSearch}>
+        <

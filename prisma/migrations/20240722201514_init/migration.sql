@@ -6,8 +6,15 @@ CREATE TABLE "User" (
     "password" TEXT NOT NULL,
     "roleId" INTEGER NOT NULL,
     "address" TEXT,
+    "postalCode" TEXT,
+    "city" TEXT,
+    "department" TEXT,
+    "country" TEXT,
+    "phoneNumber" TEXT,
     "latitude" DOUBLE PRECISION,
     "longitude" DOUBLE PRECISION,
+    "shopName" TEXT,
+    "shopDescription" TEXT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );

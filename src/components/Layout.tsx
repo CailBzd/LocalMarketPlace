@@ -23,6 +23,10 @@ const AppLayout = ({ children }) => {
   if (status === 'authenticated') {
     menuItems = [
       {
+        key: '/dashboard',
+        label: <Link href="/dashboard">{t('dashboard')}</Link>,
+      },
+      {
         key: '/profile',
         label: <Link href="/profile">{t('profile')}</Link>,
       },
@@ -33,7 +37,7 @@ const AppLayout = ({ children }) => {
         { key: '/merchant', label: <Link href="/merchant">{t('merchant')}</Link> }
       ] : []),
       ...(session.user.role === 'USER' ? [
-        { key: '/client', label: <Link href="/client">{t('client')}</Link> }
+        { key: '/client', label: <Link href="/client">{t('client')}</Link> },
       ] : []),
       {
         key: '/logout',

@@ -15,8 +15,15 @@ model User {
   roleId    Int
   role      Role     @relation(fields: [roleId], references: [id])
   address   String?
+  postalCode  String?
+  city        String?
+  department  String?
+  country     String?
+  phoneNumber String?
   latitude  Float?
   longitude Float?
+  shopName    String?   // Nom de la boutique (pour les marchands)
+  shopDescription String? // Description de la boutique (pour les marchands)
   products  Product[]
   slots     Slot[]
   orders    Order[]
